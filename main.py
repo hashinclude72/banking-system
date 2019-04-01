@@ -71,7 +71,7 @@ class StartPage(Frame):
 	def user_login(self, username, password, controller):
 		print(username, password)
 		# self.username_entry.delete(0, END)
-	    # self.password_entry.delete(0, END)
+		# self.password_entry.delete(0, END)
 		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
 		mycursor = mydb.cursor()
 		query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
@@ -93,28 +93,28 @@ class StartPage(Frame):
 		mycursor.close()
 		mydb.close()
 
-	def password_not_recognised(self):
-	    global password_not_recog_screen
-	    password_not_recog_screen = Toplevel(root)
-	    password_not_recog_screen.title("Success")
-	    password_not_recog_screen.geometry("150x100")
-	    Label(password_not_recog_screen, text="Invalid Password ").pack()
-	    Button(password_not_recog_screen, text="OK", command=self.delete_password_not_recognised).pack()
-
-	def user_not_found(self):
-	    global user_not_found_screen
-	    user_not_found_screen = Toplevel(root)
-	    user_not_found_screen.title("Success")
-	    user_not_found_screen.geometry("150x100")
-	    Label(user_not_found_screen, text="User Not Found").pack()
-	    Button(user_not_found_screen, text="OK", command=self.delete_user_not_found_screen).pack()
-
-	def delete_password_not_recognised(self):
-	    password_not_recog_screen.destroy()
-
-
-	def delete_user_not_found_screen(self):
-	    user_not_found_screen.destroy()
+	# def password_not_recognised(self):
+	#     global password_not_recog_screen
+	#     password_not_recog_screen = Toplevel(root)
+	#     password_not_recog_screen.title("Success")
+	#     password_not_recog_screen.geometry("150x100")
+	#     Label(password_not_recog_screen, text="Invalid Password ").pack()
+	#     Button(password_not_recog_screen, text="OK", command=self.delete_password_not_recognised).pack()
+	#
+	# def user_not_found(self):
+	#     global user_not_found_screen
+	#     user_not_found_screen = Toplevel(root)
+	#     user_not_found_screen.title("Success")
+	#     user_not_found_screen.geometry("150x100")
+	#     Label(user_not_found_screen, text="User Not Found").pack()
+	#     Button(user_not_found_screen, text="OK", command=self.delete_user_not_found_screen).pack()
+	#
+	# def delete_password_not_recognised(self):
+	#     password_not_recog_screen.destroy()
+	#
+	#
+	# def delete_user_not_found_screen(self):
+	#     user_not_found_screen.destroy()
 
 
 class Home(Frame):
@@ -234,6 +234,8 @@ class Register(Frame):
 
 		username = StringVar()
 		password = StringVar()
+		firstname = StringVar()
+		lastname = StringVar()
 
 		self.username_entry = Entry(frame, textvariable = username)
 		self.username_entry.place(relx = 0.35, rely = 0.2, relwidth = 0.6, relheight = 0.1)
@@ -241,11 +243,11 @@ class Register(Frame):
 		self.password_entry = Entry(frame, textvariable = password)
 		self.password_entry.place(relx = 0.35, rely = 0.35, relwidth = 0.6, relheight = 0.1)
 
-		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.5, relwidth = 0.6, relheight = 0.1)
+		self.firstname_entry = Entry(frame, textvariable = firstname)
+		self.firstname_entry.place(relx = 0.35, rely = 0.5, relwidth = 0.6, relheight = 0.1)
 
-		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.65, relwidth = 0.6, relheight = 0.1)
+		self.lastname_entry = Entry(frame, textvariable = lastname)
+		self.lastname_entry.place(relx = 0.35, rely = 0.65, relwidth = 0.6, relheight = 0.1)
 
 		# login = Button(frame, text="Login", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
 		# login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
@@ -253,9 +255,25 @@ class Register(Frame):
 		self.text_msg = Label(frame,)
 		self.text_msg.pack()
 
-		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:controller.show_frame(Account))
+		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:self.user_register(self.username_entry.get(), self.password_entry.get(), self.firstname_entry.get(), self.lastname_entry.get(), controller))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
+
+	def user_register(self, username, password, firstname, lastname, controller):
+		print(username, password, firstname, lastname)
+		# self.username_entry.delete(0, END)
+	    # self.password_entry.delete(0, END)
+		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
+		mycursor = mydb.cursor()
+		query = "INSERT INTO login(username, password, firstname, lastname) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "')"
+		try:
+			mycursor.execute(query)
+			mydb.commit()
+			controller.show_frame(StartPage)
+		except:
+   			mydb.rollback()
+		mycursor.close()
+		mydb.close()
 
 
 root = App()

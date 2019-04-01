@@ -75,7 +75,7 @@ class StartPage(Frame):
 		print(username, password)
 		# self.username_entry.delete(0, END)
 		# self.password_entry.delete(0, END)
-		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
+		mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
 		mycursor = mydb.cursor()
 		query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
 		mycursor.execute("select * from login where username = '" + username + "'")

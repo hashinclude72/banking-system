@@ -279,7 +279,7 @@ class Register(Frame):
 		# self.username_entry.delete(0, END)
 	    # self.password_entry.delete(0, END)
 		if username and password and firstname and lastname:
-			mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
+			mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
 			mycursor = mydb.cursor()
 			query = "INSERT INTO login(username, password, firstname, lastname) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "')"
 			try:

@@ -163,6 +163,9 @@ class Home(Frame):
 
 		mini_pdf = Button(lower_frame, text="Download Mini\nStatement as PDF", font=('Sans', '15'), bd=5)
 		mini_pdf.place(relx=0.5, rely=0.15, relheight=0.15, relwidth=0.5)
+
+		user_name = Label(lower_frame, text = 'Account Summary :-', font=('Sans', '14'), bd=5)
+		user_name.place(relx = 0, rely = 0.35, relheight=0.1)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
 
@@ -265,7 +268,7 @@ class Register(Frame):
 		# login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
 
 		self.text_msg = Label(frame)
-		self.text_msg.place(rely=0.65, relx=0.4)
+		self.text_msg.place(rely=0.65, relx=0.35)
 
 		register = Button(frame, text="Register", font=('Sans', '12'), bd=3, command=lambda:self.user_register(self.username_entry.get(), self.password_entry.get(), self.firstname_entry.get(), self.lastname_entry.get(), controller))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
@@ -275,17 +278,20 @@ class Register(Frame):
 		print(username, password, firstname, lastname)
 		# self.username_entry.delete(0, END)
 	    # self.password_entry.delete(0, END)
-		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
-		mycursor = mydb.cursor()
-		query = "INSERT INTO login(username, password, firstname, lastname) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "')"
-		try:
-			mycursor.execute(query)
-			mydb.commit()
-			controller.show_frame(StartPage)
-		except:
-   			mydb.rollback()
-		mycursor.close()
-		mydb.close()
+		if username and password and firstname and lastname:
+			mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
+			mycursor = mydb.cursor()
+			query = "INSERT INTO login(username, password, firstname, lastname) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "')"
+			try:
+				mycursor.execute(query)
+				mydb.commit()
+				controller.show_frame(StartPage)
+			except:
+	   			mydb.rollback()
+			mycursor.close()
+			mydb.close()
+		else:
+			self.text_msg.config(text="All Fields are Mandatory", fg="red")
 
 
 root = App()

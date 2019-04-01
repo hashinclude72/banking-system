@@ -24,7 +24,7 @@ class App(Tk):
 
 		self.frames = {}
 
-		for F in (StartPage, Home, Account):
+		for F in (StartPage, Home, Account, Register):
 			frame = F(container, self)
 			self.frames[F] = frame
 			frame.grid(row=0, column=0, sticky="nsew")
@@ -65,7 +65,7 @@ class StartPage(Frame):
 		self.text_msg = Label(frame,)
 		self.text_msg.pack()
 
-		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:controller.show_frame(Account))
+		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:controller.show_frame(Register))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
 	def user_login(self, username, password, controller):
@@ -209,6 +209,52 @@ class Account(Frame):
 		account_balance = Label(lower_frame, text = 'Account Balance :- ' + accountno , font=('Sans', '14', 'bold'), bd=10, bg='#413f63')
 		account_balance.place(relx = 0.025, rely = 0.85, relwidth = 0.95, relheight = 0.166)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
+
+
+class Register(Frame):
+
+
+	def __init__(self, parent, controller):
+		Frame.__init__(self, parent)
+
+		frame = Frame(self, bg='black', bd=5)
+		frame.place(relx=0.5, rely=0.2, relwidth=0.6, relheight=0.6, anchor='n')
+
+		user_name = Label(frame, text = 'Username :-', font=('Sans', '14', 'bold'), bd=10, bg='#413f63')
+		user_name.place(relx = 0.02, rely = 0.2, relwidth = 0.3, relheight = 0.1)
+
+		first_name = Label(frame, text = 'Firstname :-', font=('Sans', '14', 'bold'), bd=10, bg='#413f63')
+		first_name.place(relx = 0.02, rely = 0.35, relwidth = 0.3, relheight = 0.1)
+
+		last_name = Label(frame, text = 'Lastname :-', font=('Sans', '14', 'bold'), bd=10, bg='#413f63')
+		last_name.place(relx = 0.02, rely = 0.5, relwidth = 0.3, relheight = 0.1)
+
+		pass_word = Label(frame, text = 'Password :-', font=('Sans', '14', 'bold'), bd=10, bg='#413f63')
+		pass_word.place(relx = 0.02, rely = 0.65, relwidth = 0.3, relheight = 0.1)
+
+		username = StringVar()
+		password = StringVar()
+
+		self.username_entry = Entry(frame, textvariable = username)
+		self.username_entry.place(relx = 0.35, rely = 0.2, relwidth = 0.6, relheight = 0.1)
+
+		self.password_entry = Entry(frame, textvariable = password)
+		self.password_entry.place(relx = 0.35, rely = 0.35, relwidth = 0.6, relheight = 0.1)
+
+		self.password_entry = Entry(frame, textvariable = password)
+		self.password_entry.place(relx = 0.35, rely = 0.5, relwidth = 0.6, relheight = 0.1)
+
+		self.password_entry = Entry(frame, textvariable = password)
+		self.password_entry.place(relx = 0.35, rely = 0.65, relwidth = 0.6, relheight = 0.1)
+
+		# login = Button(frame, text="Login", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
+		# login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
+
+		self.text_msg = Label(frame,)
+		self.text_msg.pack()
+
+		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:controller.show_frame(Account))
+		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
 
 

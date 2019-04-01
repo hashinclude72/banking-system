@@ -48,25 +48,25 @@ class StartPage(Frame):
 		frame.place(relx=0.5, rely=0.2, relwidth=0.6, relheight=0.6, anchor='n')
 
 		user_name = Label(frame, text = 'Username :-', font=('Sans', '14'), bd=5)
-		user_name.place(relx = 0.02, rely = 0.2, relwidth = 0.3, relheight = 0.1)
+		user_name.place(relx = 0.02, rely = 0.1, relwidth = 0.3, relheight = 0.1)
 
 		pass_word = Label(frame, text = 'Password :-', font=('Sans', '14'), bd=5)
-		pass_word.place(relx = 0.02, rely = 0.4, relwidth = 0.3, relheight = 0.1)
+		pass_word.place(relx = 0.02, rely = 0.3, relwidth = 0.3, relheight = 0.1)
 
 		username = StringVar()
 		password = StringVar()
 
 		self.username_entry = Entry(frame, textvariable = username)
-		self.username_entry.place(relx = 0.35, rely = 0.2, relwidth = 0.6, relheight = 0.1)
+		self.username_entry.place(relx = 0.35, rely = 0.1, relwidth = 0.6, relheight = 0.1)
 
 		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.4, relwidth = 0.6, relheight = 0.1)
+		self.password_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
 
 		login = Button(frame, text="Login", font=('Sans', '12'), bd=3, command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
-		login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
+		login.place(relx = 0.3, rely = 0.65, relwidth = 0.4, relheight = 0.1)
 
 		self.text_msg = Label(frame)
-		self.text_msg.pack()
+		self.text_msg.place(rely=0.5, relx=0.4)
 
 		register = Button(frame, text="Register", font=('Sans', '12'), bd=3, command=lambda:controller.show_frame(Register))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
@@ -131,7 +131,7 @@ class Home(Frame):
 		frame = Frame(base, bd=5)
 		frame.place(relx=0.5, rely=0.025, relwidth=0.95, relheight=0.15, anchor='n')
 
-		home = Button(frame, text="HOME", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Home))
+		home = Button(frame, text="Home", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Home))
 		home.place(relx=0, relheight=1, relwidth=0.2)
 
 		button = Button(frame, text="Accounts", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
@@ -233,16 +233,16 @@ class Register(Frame):
 		frame.place(relx=0.5, rely=0.2, relwidth=0.6, relheight=0.6, anchor='n')
 
 		user_name = Label(frame, text = 'Username :-', font=('Sans', '14'), bd=5)
-		user_name.place(relx = 0.02, rely = 0.1, relwidth = 0.3, relheight = 0.1)
+		user_name.place(relx = 0.02, rely = 0, relwidth = 0.3, relheight = 0.1)
 
 		first_name = Label(frame, text = 'Firstname :-', font=('Sans', '14'), bd=5)
-		first_name.place(relx = 0.02, rely = 0.25, relwidth = 0.3, relheight = 0.1)
+		first_name.place(relx = 0.02, rely = 0.15, relwidth = 0.3, relheight = 0.1)
 
 		last_name = Label(frame, text = 'Lastname :-', font=('Sans', '14'), bd=5)
-		last_name.place(relx = 0.02, rely = 0.4, relwidth = 0.3, relheight = 0.1)
+		last_name.place(relx = 0.02, rely = 0.3, relwidth = 0.3, relheight = 0.1)
 
 		pass_word = Label(frame, text = 'Password :-', font=('Sans', '14'), bd=5)
-		pass_word.place(relx = 0.02, rely = 0.55, relwidth = 0.3, relheight = 0.1)
+		pass_word.place(relx = 0.02, rely = 0.45, relwidth = 0.3, relheight = 0.1)
 
 		username = StringVar()
 		password = StringVar()
@@ -250,24 +250,24 @@ class Register(Frame):
 		lastname = StringVar()
 
 		self.username_entry = Entry(frame, textvariable = username)
-		self.username_entry.place(relx = 0.35, rely = 0.1, relwidth = 0.6, relheight = 0.1)
+		self.username_entry.place(relx = 0.35, rely = 0, relwidth = 0.6, relheight = 0.1)
 
 		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.25, relwidth = 0.6, relheight = 0.1)
+		self.password_entry.place(relx = 0.35, rely = 0.15, relwidth = 0.6, relheight = 0.1)
 
 		self.firstname_entry = Entry(frame, textvariable = firstname)
-		self.firstname_entry.place(relx = 0.35, rely = 0.4, relwidth = 0.6, relheight = 0.1)
+		self.firstname_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
 
 		self.lastname_entry = Entry(frame, textvariable = lastname)
-		self.lastname_entry.place(relx = 0.35, rely = 0.55, relwidth = 0.6, relheight = 0.1)
+		self.lastname_entry.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.1)
 
 		# login = Button(frame, text="Login", font=('Sans', '15'), bd=5, bg='#413f63', command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
 		# login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
 
-		self.text_msg = Label(frame, bg = '#656668')
-		self.text_msg.pack()
+		self.text_msg = Label(frame)
+		self.text_msg.place(rely=0.65, relx=0.4)
 
-		register = Button(frame, text="Register", font=('Sans', '15'), bd=5, command=lambda:self.user_register(self.username_entry.get(), self.password_entry.get(), self.firstname_entry.get(), self.lastname_entry.get(), controller))
+		register = Button(frame, text="Register", font=('Sans', '12'), bd=3, command=lambda:self.user_register(self.username_entry.get(), self.password_entry.get(), self.firstname_entry.get(), self.lastname_entry.get(), controller))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
 

@@ -1,5 +1,7 @@
 from tkinter import *
 import tkinter as tk
+import mysql.connector
+
 # import requests
 
 HEIGHT = 700
@@ -34,6 +36,8 @@ class App(Tk):
 
 
 class StartPage(Frame):
+
+
 	def __init__(self, parent, controller):
 		Frame.__init__(self, parent)
 
@@ -49,19 +53,68 @@ class StartPage(Frame):
 		username = StringVar()
 		password = StringVar()
 
-		username_entry = Entry(frame, textvariable = username)
-		username_entry.place(relx = 0.35, rely = 0.2, relwidth = 0.6, relheight = 0.1)
+		self.username_entry = Entry(frame, textvariable = username)
+		self.username_entry.place(relx = 0.35, rely = 0.2, relwidth = 0.6, relheight = 0.1)
 
-		password_entry = Entry(frame, textvariable = password)
-		password_entry.place(relx = 0.35, rely = 0.4, relwidth = 0.6, relheight = 0.1)
+		self.password_entry = Entry(frame, textvariable = password)
+		self.password_entry.place(relx = 0.35, rely = 0.4, relwidth = 0.6, relheight = 0.1)
 
-		login = Button(frame, text="Login", font=('Sans', '15', 'bold'), bd=5, bg='#413f63')
+		login = Button(frame, text="Login", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
 		login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
+
+		self.text_msg = Label(frame,)
+		self.text_msg.pack()
 
 		register = Button(frame, text="Register", font=('Sans', '15', 'bold'), bd=5, bg='#413f63', command=lambda:controller.show_frame(Account))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
+	def user_login(self, username, password, controller):
+		print(username, password)
+		# self.username_entry.delete(0, END)
+	    # self.password_entry.delete(0, END)
+		mydb = mysql.connector.connect(host="localhost", user="root", passwd="", database="auth")
+		mycursor = mydb.cursor()
+		query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
+		mycursor.execute("select * from login where username = '" + username + "'")
+		myresult = mycursor.fetchone()
+		rows = mycursor.rowcount
+		print(rows)
+		if rows > 0 :
+			user_pass = myresult[1]
+			if user_pass == password:
+				controller.show_frame(Account)
+			else:
+				self.text_msg.config(text="Invalid Password ", fg="red")
+				# self.password_not_recognised()
 
+		else:
+			self.text_msg.config(text="User Not Found", fg="red")
+			# self.user_not_found()
+		mycursor.close()
+		mydb.close()
+
+	def password_not_recognised(self):
+	    global password_not_recog_screen
+	    password_not_recog_screen = Toplevel(root)
+	    password_not_recog_screen.title("Success")
+	    password_not_recog_screen.geometry("150x100")
+	    Label(password_not_recog_screen, text="Invalid Password ").pack()
+	    Button(password_not_recog_screen, text="OK", command=self.delete_password_not_recognised).pack()
+
+	def user_not_found(self):
+	    global user_not_found_screen
+	    user_not_found_screen = Toplevel(root)
+	    user_not_found_screen.title("Success")
+	    user_not_found_screen.geometry("150x100")
+	    Label(user_not_found_screen, text="User Not Found").pack()
+	    Button(user_not_found_screen, text="OK", command=self.delete_user_not_found_screen).pack()
+
+	def delete_password_not_recognised(self):
+	    password_not_recog_screen.destroy()
+
+
+	def delete_user_not_found_screen(self):
+	    user_not_found_screen.destroy()
 
 
 class Home(Frame):

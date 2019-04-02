@@ -9,6 +9,21 @@ WIDTH = 800
 username_global = ""
 text_msg = ''
 
+account_number = ''
+account_name = ''
+account_status = ''
+customer_name = ''
+account_open_date = ''
+account_balance = ''
+
+f_name = ''
+l_name = ''
+account_name_file = ''
+account_number_file = ''
+status = ''
+open_date = ''
+amount_file = ''
+
 class App(Tk):
 	def __init__(self, *args, **kwargs):
 		Tk.__init__(self, *args, **kwargs)
@@ -82,7 +97,8 @@ class StartPage(Frame):
 
 def user_login(username, password, controller):
 	# print(username, password)
-	# global username_global
+	global username_global
+	username_global = username
 	# username_global = self.username_entry.get()
 	# print(username_global + ' gl')
 	# self.username_entry.delete(0, END)
@@ -108,6 +124,7 @@ def user_login(username, password, controller):
 		# self.user_not_found()
 	mycursor.close()
 	mydb.close()
+	update(controller)
 
 
 #-----------BOTO3--------------------------------
@@ -195,7 +212,7 @@ class Home(Frame):
 		lower_frame = Frame(base, bd=5)
 		lower_frame.place(relx=0.5, rely=0.2, relwidth=0.95, relheight=0.75, anchor='n')
 
-		account_summary = Button(lower_frame, text="Account Summary", font=('Sans', '15'), bd=5)
+		account_summary = Button(lower_frame, text="Account Summary", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
 		account_summary.place(relx=0, rely=0, relheight=0.15, relwidth=0.5)
 
 		fund_transfer = Button(lower_frame, text="Fund Transfer", font=('Sans', '15'), bd=5)
@@ -245,36 +262,77 @@ class Account(Frame):
 		lower_frame.place(relx=0.5, rely=0.2, relwidth=0.95, relheight=0.75, anchor='n')
 
 
-		accountno = '789456123'
+		global username_global
+		global account_number
+		global account_name
+		global account_status
+		global customer_name
+		global account_open_date
+		global account_balance
 
-		account_number = Label(lower_frame, text = 'Account Number :- ' + username_global , font=('Sans', '14'), bd=5)
+		account_number = Label(lower_frame, text = 'Account Number :- '  , font=('Sans', '14'), bd=5)
 		account_number.place(relx = 0.025, rely = 0, relwidth = 0.95, relheight = 0.166)
 
-		account_name = Label(lower_frame, text = 'Account Name :- ' + accountno , font=('Sans', '14'), bd=5)
+		account_name = Label(lower_frame, text = 'Account Name :- '  , font=('Sans', '14'), bd=5)
 		account_name.place(relx = 0.025, rely = 0.17, relwidth = 0.95, relheight = 0.166)
 
-		account_status = Label(lower_frame, text = 'Account Status :- ' + accountno , font=('Sans', '14'), bd=5)
+		account_status = Label(lower_frame, text = 'Account Status :- '   , font=('Sans', '14'), bd=5)
 		account_status.place(relx = 0.025, rely = 0.34, relwidth = 0.95, relheight = 0.166)
 
-		customer_name = Label(lower_frame, text = 'Customer Name :- ' + accountno , font=('Sans', '14'), bd=5)
+		customer_name = Label(lower_frame, text = 'Customer Name :- '  , font=('Sans', '14'), bd=5)
 		customer_name.place(relx = 0.025, rely = 0.51, relwidth = 0.95, relheight = 0.166)
 
-		account_open_date = Label(lower_frame, text = 'Account Open Date :- ' + accountno , font=('Sans', '14'), bd=5)
+		account_open_date = Label(lower_frame, text = 'Account Open Date :- '  , font=('Sans', '14'), bd=5)
 		account_open_date.place(relx = 0.025, rely = 0.68, relwidth = 0.95, relheight = 0.166)
 
-		account_balance = Label(lower_frame, text = 'Account Balance :- ' + accountno , font=('Sans', '14'), bd=5)
+		account_balance = Label(lower_frame, text = 'Account Balance :- '  , font=('Sans', '14'), bd=5)
 		account_balance.place(relx = 0.025, rely = 0.85, relwidth = 0.95, relheight = 0.166)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
-	def update(self, controller):
-		# import xml.etree.ElementTree as ET
-		global username_global
-		print(username_global + ' gl')
-		# path = "users/" + username +"/details.xml"
-		# tree = ET.parse(path)
-		# root = tree.getroot()
-		#
-		# print (root)
+def update(controller):
+	global username_global
+	global account_number
+	global account_name
+	global account_status
+	global customer_name
+	global account_open_date
+	global account_balance
+
+	global f_name
+	global l_name
+	global account_name_file
+	global account_number_file
+	global status
+	global open_date
+	global amount_file
+
+	account_number.config(text='Account Number :- ' + username_global)
+
+	import xml.etree.ElementTree as ET
+	path = "users/" + username_global +"/details.xml"
+	tree = ET.parse(path)
+	root = tree.getroot()
+
+	user_data = []
+	for elem in root:
+		# for subelem in elem:
+		user_data.append(elem.text)
+	username_global, f_name, l_name, account_name_file, account_number_file, status, open_date = user_data
+	print(user_data)
+
+	account_number.config(text='Account Number :- ' + account_number_file)
+	account_name.config(text='Account Name :- ' + account_name_file)
+	account_status.config(text='Account Status :- ' + status)
+	customer_name.config(text='Customer Name :- ' + f_name + " " + l_name)
+	account_open_date.config(text='Account Open Date :- ' + open_date)
+
+	path = "users/" + username_global +"/amount.xml"
+	tree = ET.parse(path)
+	root = tree.getroot()
+	amount_file = root[0].text
+	print(amount_file)
+	account_balance.config(text='Account Balance :- ' + amount_file)
+
 
 
 

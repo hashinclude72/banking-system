@@ -387,25 +387,23 @@ class Register(Frame):
 		pass_word = Label(frame, text = 'Password :-', font=('Sans', '14'), bd=5)
 		pass_word.place(relx = 0.02, rely = 0.45, relwidth = 0.3, relheight = 0.1)
 
-		username = StringVar()
-		password = StringVar()
-		firstname = StringVar()
-		lastname = StringVar()
+		# username = StringVar()
+		# password = StringVar()
+		# firstname = StringVar()
+		# lastname = StringVar()
 
-		self.username_entry = Entry(frame, textvariable = username)
+		self.username_entry = Entry(frame, textvariable = '')
 		self.username_entry.place(relx = 0.35, rely = 0, relwidth = 0.6, relheight = 0.1)
 
-		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.15, relwidth = 0.6, relheight = 0.1)
+		self.firstname_entry = Entry(frame, textvariable = '')
+		self.firstname_entry.place(relx = 0.35, rely = 0.15, relwidth = 0.6, relheight = 0.1)
 
-		self.firstname_entry = Entry(frame, textvariable = firstname)
-		self.firstname_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
+		self.lastname_entry = Entry(frame, textvariable = '')
+		self.lastname_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
 
-		self.lastname_entry = Entry(frame, textvariable = lastname)
-		self.lastname_entry.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.1)
+		self.password_entry = Entry(frame, textvariable = '', show="*")
+		self.password_entry.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.1)
 
-		# login = Button(frame, text="Login", font=('Sans', '15'), bd=5, bg='#413f63', command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
-		# login.place(relx = 0.3, rely = 0.6, relwidth = 0.4, relheight = 0.1)
 
 		self.text_msg = Label(frame)
 		self.text_msg.place(rely=0.65, relx=0.35)

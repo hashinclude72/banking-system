@@ -24,6 +24,10 @@ status = ''
 open_date = ''
 amount_file = ''
 
+home_customer_username = ''
+home_account_number = ''
+home_balance = ''
+
 class App(Tk):
 	def __init__(self, *args, **kwargs):
 		Tk.__init__(self, *args, **kwargs)
@@ -224,8 +228,21 @@ class Home(Frame):
 		mini_pdf = Button(lower_frame, text="Download Mini\nStatement as PDF", font=('Sans', '15'), bd=5)
 		mini_pdf.place(relx=0.5, rely=0.15, relheight=0.15, relwidth=0.5)
 
-		user_name = Label(lower_frame, text = 'Account Summary :-', font=('Sans', '14'), bd=5)
+		user_name = Label(lower_frame, text = 'Hello welcome to INTRIGIN Banking.', font=('Sans', '14'), bd=5)
 		user_name.place(relx = 0, rely = 0.35, relheight=0.1)
+
+		global home_customer_username
+		global home_account_number
+		global home_balance
+
+		home_customer_username = Label(lower_frame, text = 'Account Number :-', font=('Sans', '14'), bd=5)
+		home_customer_username.place(relx = 0, rely = 0.45, relheight=0.1)
+
+		home_account_number = Label(lower_frame, text = 'Account Summary :-', font=('Sans', '14'), bd=5)
+		home_account_number.place(relx = 0, rely = 0.55, relheight=0.1)
+
+		home_balance = Label(lower_frame, text = 'Account Summary :-', font=('Sans', '14'), bd=5)
+		home_balance.place(relx = 0, rely = 0.65, relheight=0.1)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
 
@@ -240,7 +257,7 @@ class Account(Frame):
 		frame = Frame(base, bd=5)
 		frame.place(relx=0.5, rely=0.025, relwidth=0.95, relheight=0.15, anchor='n')
 
-		home = Button(frame, text="HOME", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Home))
+		home = Button(frame, text="Home", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Home))
 		home.place(relx=0, relheight=1, relwidth=0.2)
 
 		button = Button(frame, text="Accounts", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
@@ -271,22 +288,22 @@ class Account(Frame):
 		global account_balance
 
 		account_number = Label(lower_frame, text = 'Account Number :- '  , font=('Sans', '14'), bd=5)
-		account_number.place(relx = 0.025, rely = 0, relwidth = 0.95, relheight = 0.166)
+		account_number.place(relx = 0.025, rely = 0, relheight = 0.166)
 
 		account_name = Label(lower_frame, text = 'Account Name :- '  , font=('Sans', '14'), bd=5)
-		account_name.place(relx = 0.025, rely = 0.17, relwidth = 0.95, relheight = 0.166)
+		account_name.place(relx = 0.025, rely = 0.17, relheight = 0.166)
 
 		account_status = Label(lower_frame, text = 'Account Status :- '   , font=('Sans', '14'), bd=5)
-		account_status.place(relx = 0.025, rely = 0.34, relwidth = 0.95, relheight = 0.166)
+		account_status.place(relx = 0.025, rely = 0.34, relheight = 0.166)
 
 		customer_name = Label(lower_frame, text = 'Customer Name :- '  , font=('Sans', '14'), bd=5)
-		customer_name.place(relx = 0.025, rely = 0.51, relwidth = 0.95, relheight = 0.166)
+		customer_name.place(relx = 0.025, rely = 0.51, relheight = 0.166)
 
 		account_open_date = Label(lower_frame, text = 'Account Open Date :- '  , font=('Sans', '14'), bd=5)
-		account_open_date.place(relx = 0.025, rely = 0.68, relwidth = 0.95, relheight = 0.166)
+		account_open_date.place(relx = 0.025, rely = 0.68, relheight = 0.166)
 
 		account_balance = Label(lower_frame, text = 'Account Balance :- '  , font=('Sans', '14'), bd=5)
-		account_balance.place(relx = 0.025, rely = 0.85, relwidth = 0.95, relheight = 0.166)
+		account_balance.place(relx = 0.025, rely = 0.85, relheight = 0.166)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
 def update(controller):
@@ -298,6 +315,10 @@ def update(controller):
 	global account_open_date
 	global account_balance
 
+	global home_customer_username
+	global home_account_number
+	global home_balance
+
 	global f_name
 	global l_name
 	global account_name_file
@@ -305,6 +326,8 @@ def update(controller):
 	global status
 	global open_date
 	global amount_file
+
+
 
 	account_number.config(text='Account Number :- ' + username_global)
 
@@ -332,6 +355,10 @@ def update(controller):
 	amount_file = root[0].text
 	print(amount_file)
 	account_balance.config(text='Account Balance :- ' + amount_file)
+
+	home_customer_username.config(text = f_name + ' ' + l_name)
+	home_account_number.config(text='Account Number :- ' + account_number_file)
+	home_balance.config(text='Account Balance :- ' + amount_file)
 
 
 
@@ -465,4 +492,6 @@ class Register(Frame):
 
 root = App()
 root.geometry('700x500')
+root.title('INTRIGIN Banking')
+root.resizable(0, 0)
 root.mainloop()

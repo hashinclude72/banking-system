@@ -6,6 +6,8 @@ import mysql.connector
 
 HEIGHT = 700
 WIDTH = 800
+username_global = ""
+text_msg = ''
 
 class App(Tk):
 	def __init__(self, *args, **kwargs):
@@ -53,48 +55,89 @@ class StartPage(Frame):
 		pass_word = Label(frame, text = 'Password :-', font=('Sans', '14'), bd=5)
 		pass_word.place(relx = 0.02, rely = 0.3, relwidth = 0.3, relheight = 0.1)
 
-		username = StringVar()
-		password = StringVar()
+		# username = StringVar()
+		# password = StringVar()
 
-		self.username_entry = Entry(frame, textvariable = username)
-		self.username_entry.place(relx = 0.35, rely = 0.1, relwidth = 0.6, relheight = 0.1)
+		username_entry = Entry(frame)
+		username_entry.place(relx = 0.35, rely = 0.1, relwidth = 0.6, relheight = 0.1)
 
-		self.password_entry = Entry(frame, textvariable = password)
-		self.password_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
+		password_entry = Entry(frame, show="*")
+		password_entry.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.1)
 
-		login = Button(frame, text="Login", font=('Sans', '12'), bd=3, command=lambda:self.user_login(self.username_entry.get(), self.password_entry.get(), controller))
+		# global username
+		# username = self.username_entry.get()
+		# print(username)
+		# print('qwe')
+
+		login = Button(frame, text="Login", font=('Sans', '12'), bd=3, command=lambda:user_login(username_entry.get(), password_entry.get(), controller))
 		login.place(relx = 0.3, rely = 0.65, relwidth = 0.4, relheight = 0.1)
 
-		self.text_msg = Label(frame)
-		self.text_msg.place(rely=0.5, relx=0.4)
+		global text_msg
+
+		text_msg = Label(frame)
+		text_msg.place(rely=0.5, relx=0.4)
 
 		register = Button(frame, text="Register", font=('Sans', '12'), bd=3, command=lambda:controller.show_frame(Register))
 		register.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
-	def user_login(self, username, password, controller):
-		print(username, password)
-		# self.username_entry.delete(0, END)
-		# self.password_entry.delete(0, END)
-		mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
-		mycursor = mydb.cursor()
-		query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
-		mycursor.execute("select * from login where username = '" + username + "'")
-		myresult = mycursor.fetchone()
-		rows = mycursor.rowcount
-		print(rows)
-		if rows > 0 :
-			user_pass = myresult[1]
-			if user_pass == password:
-				controller.show_frame(Home)
-			else:
-				self.text_msg.config(text="Invalid Password ", fg="red")
-				# self.password_not_recognised()
-
+def user_login(username, password, controller):
+	# print(username, password)
+	# global username_global
+	# username_global = self.username_entry.get()
+	# print(username_global + ' gl')
+	# self.username_entry.delete(0, END)
+	# self.password_entry.delete(0, END)
+	global text_msg
+	mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
+	mycursor = mydb.cursor()
+	query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
+	mycursor.execute("select * from login where username = '" + username + "'")
+	myresult = mycursor.fetchone()
+	rows = mycursor.rowcount
+	print(rows)
+	if rows > 0 :
+		user_pass = myresult[1]
+		if user_pass == password:
+			controller.show_frame(Home)
 		else:
-			self.text_msg.config(text="User Not Found", fg="red")
-			# self.user_not_found()
-		mycursor.close()
-		mydb.close()
+			text_msg.config(text="Invalid Password ", fg="red")
+			# self.password_not_recognised()
+
+	else:
+		text_msg.config(text="User Not Found", fg="red")
+		# self.user_not_found()
+	mycursor.close()
+	mydb.close()
+
+
+#-----------BOTO3--------------------------------
+		# import boto3
+		# s3_resource = boto3.resource('s3')
+		# s3_resource.meta.client.upload_file(Filename='C:/Users/hash-include/Documents/GitHub/banking-system/index.py', Bucket='jigyasa-files', Key='index.py')
+		#
+
+#----------------BOTO-------------------------------
+# 		import boto
+# 		import boto.s3.connection
+# 		access_key = 'AKIAJMI2PGLHYSBHUL7A'
+# 		secret_key = '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'
+#
+# 		conn = boto.connect_s3(
+# 		        aws_access_key_id = access_key,
+# 		        aws_secret_access_key = secret_key,
+# 		        # host = 'objects.dreamhost.com',
+# 		        # #is_secure=False,               # uncomment if you are not using ssl
+# 		        calling_format = boto.s3.connection.OrdinaryCallingFormat(),
+# 		        )
+# #---------LISTING OWNED BUCKETS-------------------
+# 		for bucket in conn.get_all_buckets():
+# 			print ("%s \t %s" %(bucket.name, bucket.creation_date))
+#
+# # ------------LISTING A BUCKET’S CONTENT--------------
+# 			for key in bucket.list():
+# 				print ("%s \t %s \t %s" %(key.name, key.size, key.last_modified))
+
+
 
 	# def password_not_recognised(self):
 	#     global password_not_recog_screen
@@ -143,7 +186,7 @@ class Home(Frame):
 		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
 		home.place(relx=0.6, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))
 		home.place(relx=0.8, relheight=1, relwidth=0.2)
 		# MENU FRAME END----------------------------------------------------------------------------------------------------
 
@@ -192,7 +235,7 @@ class Account(Frame):
 		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
 		home.place(relx=0.6, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))
 		home.place(relx=0.8, relheight=1, relwidth=0.2)
 		# MENU FRAME END----------------------------------------------------------------------------------------------------
 
@@ -201,9 +244,10 @@ class Account(Frame):
 		lower_frame = Frame(base, bd=5)
 		lower_frame.place(relx=0.5, rely=0.2, relwidth=0.95, relheight=0.75, anchor='n')
 
+
 		accountno = '789456123'
 
-		account_number = Label(lower_frame, text = 'Account Number :- ' + accountno , font=('Sans', '14'), bd=5)
+		account_number = Label(lower_frame, text = 'Account Number :- ' + username_global , font=('Sans', '14'), bd=5)
 		account_number.place(relx = 0.025, rely = 0, relwidth = 0.95, relheight = 0.166)
 
 		account_name = Label(lower_frame, text = 'Account Name :- ' + accountno , font=('Sans', '14'), bd=5)
@@ -221,6 +265,17 @@ class Account(Frame):
 		account_balance = Label(lower_frame, text = 'Account Balance :- ' + accountno , font=('Sans', '14'), bd=5)
 		account_balance.place(relx = 0.025, rely = 0.85, relwidth = 0.95, relheight = 0.166)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
+
+	def update(self, controller):
+		# import xml.etree.ElementTree as ET
+		global username_global
+		print(username_global + ' gl')
+		# path = "users/" + username +"/details.xml"
+		# tree = ET.parse(path)
+		# root = tree.getroot()
+		#
+		# print (root)
+
 
 
 class Register(Frame):
@@ -285,13 +340,69 @@ class Register(Frame):
 			try:
 				mycursor.execute(query)
 				mydb.commit()
+
+				import xml.etree.ElementTree as ET
+				import string
+				import random
+				from datetime import date
+				import os
+				size=4
+				chars = string.ascii_uppercase + string.digits + string.ascii_lowercase
+				acc_name = ''.join(random.choice(chars) for _ in range(size))
+				# create the file structure
+				data = ET.Element('data')
+				user_name = ET.SubElement(data, 'username')
+				first_name = ET.SubElement(data, 'firstname')
+				last_name = ET.SubElement(data, 'lastname')
+				account_name = ET.SubElement(data, 'account_name')
+				account_number = ET.SubElement(data, 'account_number')
+				status = ET.SubElement(data, 'status')
+				open_date = ET.SubElement(data, 'open_date')
+				user_name.text = username
+				first_name.text = firstname
+				last_name.text = lastname
+				account_name.text = username + acc_name
+				account_number.text = str(''.join(random.choice(string.digits) for _ in range(10)))
+				status.text = 'Active'
+				open_date.text = str(date.today())
+
+				# create a new XML file with the results
+				mydata = ET.tostring(data).decode()
+
+				#-----------File handling------------------------
+				path = "users/" + username
+				try:
+					os.mkdir(path)
+				except OSError:
+					print ("Creation of the directory %s failed" % path)
+				else:
+					print ("Successfully created the directory %s " % path)
+				path = "users/" + username +"/details.xml"
+				print(path)
+				myfile = open(path, "w")
+				myfile.write(mydata)
+				#-----------------------------------------------
+
+				data = ET.Element('data')
+				amount = ET.SubElement(data, 'amount')
+				amount.text = str(0.00)
+
+				mydata = ET.tostring(data).decode()
+				path = "users/" + username+"/amount.xml"
+				print(path)
+				myfile = open(path, "w")
+				myfile.write(mydata)
+				#------------------------------------------------------
+
+
 				controller.show_frame(StartPage)
 			except:
-	   			mydb.rollback()
+				self.text_msg.config(text="User Already Exists.", fg="red")
+				mydb.rollback()
 			mycursor.close()
 			mydb.close()
 		else:
-			self.text_msg.config(text="All Fields are Mandatory", fg="red")
+			self.text_msg.config(text="All Fields are Mandatory.", fg="red")
 
 
 root = App()

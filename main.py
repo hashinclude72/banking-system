@@ -110,8 +110,8 @@ def user_login(username, password, controller):
 	global text_msg
 	mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
 	mycursor = mydb.cursor()
-	query = "select * from login where username = '" + username + "'"	# and password = " + password + "'"
-	mycursor.execute("select * from login where username = '" + username + "'")
+	query = "select * from login where username = '" + username + "'"
+	mycursor.execute(query)
 	myresult = mycursor.fetchone()
 	rows = mycursor.rowcount
 	print(rows)

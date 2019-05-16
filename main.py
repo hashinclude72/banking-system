@@ -45,7 +45,7 @@ class App(Tk):
 
 		self.frames = {}
 
-		for F in (StartPage, Home, Account, Register):
+		for F in (StartPage, Home, Account, Register, Fund):
 			frame = F(container, self)
 			self.frames[F] = frame
 			frame.grid(row=0, column=0, sticky="nsew")
@@ -201,7 +201,7 @@ class Home(Frame):
 		button = Button(frame, text="Accounts", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
 		button.place(relx=0.2, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		home.place(relx=0.4, relheight=1, relwidth=0.2)
 
 		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
@@ -219,7 +219,7 @@ class Home(Frame):
 		account_summary = Button(lower_frame, text="Account Summary", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
 		account_summary.place(relx=0, rely=0, relheight=0.15, relwidth=0.5)
 
-		fund_transfer = Button(lower_frame, text="Fund Transfer", font=('Sans', '15'), bd=5)
+		fund_transfer = Button(lower_frame, text="Fund Transfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		fund_transfer.place(relx=0.5, rely=0, relheight=0.15, relwidth=0.5)
 
 		mini_statement = Button(lower_frame, text="Mini Statement", font=('Sans', '15'), bd=5)
@@ -263,7 +263,7 @@ class Account(Frame):
 		button = Button(frame, text="Accounts", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
 		button.place(relx=0.2, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		home.place(relx=0.4, relheight=1, relwidth=0.2)
 
 		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
@@ -305,6 +305,123 @@ class Account(Frame):
 		account_balance = Label(lower_frame, text = 'Account Balance :- '  , font=('Sans', '14'), bd=5)
 		account_balance.place(relx = 0.025, rely = 0.85, relheight = 0.166)
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
+
+class Fund(Frame):
+	def __init__(self, parent, controller):
+		Frame.__init__(self, parent)
+
+		# MENU FRAME----------------------------------------------------------------------------------------------------
+		base = Frame(self, bd=5)
+		base.place(relx=0.5, relwidth=1, relheight=1, anchor='n')
+
+		frame = Frame(base, bd=5)
+		frame.place(relx=0.5, rely=0.025, relwidth=0.95, relheight=0.15, anchor='n')
+
+		home = Button(frame, text="Home", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Home))
+		home.place(relx=0, relheight=1, relwidth=0.2)
+
+		button = Button(frame, text="Accounts", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Account))
+		button.place(relx=0.2, relheight=1, relwidth=0.2)
+
+		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5)
+		home.place(relx=0.4, relheight=1, relwidth=0.2)
+
+		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
+		home.place(relx=0.6, relheight=1, relwidth=0.2)
+
+		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))
+		home.place(relx=0.8, relheight=1, relwidth=0.2)
+		# MENU FRAME END----------------------------------------------------------------------------------------------------
+
+
+		# BODY FRAME--------------------------------------------------------------------------------------------------------
+		lower_frame = Frame(base, bd=5)
+		lower_frame.place(relx=0.5, rely=0.2, relwidth=0.95, relheight=0.75, anchor='n')
+
+		account_no = Label(lower_frame, text = 'Account Number :-', font=('Sans', '14'), bd=5)
+		account_no.place(relx = 0.02, rely = 0.3, relwidth = 0.3, relheight = 0.08)
+
+		amount = Label(lower_frame, text = 'Amount :-', font=('Sans', '14'), bd=5)
+		amount.place(relx = 0.02, rely = 0.45, relwidth = 0.3, relheight = 0.08)
+
+		self.account_no = Entry(lower_frame, textvariable = '')
+		self.account_no.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.08)
+
+		self.amount = Entry(lower_frame, textvariable = '')
+		self.amount.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.08)
+
+		transfer = Button(lower_frame, text="Transfer", font=('Sans', '12'), bd=3, command=lambda:self.transfer(self.account_no.get(), self.amount.get(), controller))
+		transfer.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
+
+		# BODY FRAME END----------------------------------------------------------------------------------------------------
+
+	def transfer(self, acc_no, amnt, controller):
+
+		mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
+		mycursor = mydb.cursor()
+		global username_global
+
+		query = "select account_no from login where username = '" + username_global + "'"
+		mycursor.execute(query)
+		from_account = mycursor.fetchone()
+
+		query = "select username from login where account_no = '" + acc_no + "'"
+		mycursor.execute(query)
+		to_username = mycursor.fetchone()
+
+		import xml.etree.ElementTree as ET
+		import os
+
+
+		path_sender = "users/" + username_global +"/transaction.xml"
+		path_receiver = "users/" + to_username +"/transaction.xml"
+
+		# create the file structure sender
+		tree = ET.parse(path_sender)
+		root = tree.getroot()
+		data = root.find('data')
+		statement = ET.SubElement(data, 'statement')
+		from_account_no = ET.SubElement(statement, 'from_account_no')
+		to_account_no = ET.SubElement(statement, 'to_account_no')
+		amount = ET.SubElement(statement, 'amount')
+		type = ET.SubElement(statement, 'type')
+		from_account_no.text = from_account
+		to_account_no.text = acc_no
+		amount.text = amnt
+		type.text = "Credited"
+
+		# create a new XML file with the results sender
+		mydata_sender = ET.tostring(root).decode()
+
+		# create the file structure sender
+		tree = ET.parse(path_receiver)
+		root = tree.getroot()
+		data = root.find('data')
+		statement = ET.SubElement(data, 'statement')
+		from_account_no = ET.SubElement(statement, 'from_account_no')
+		to_account_no = ET.SubElement(statement, 'to_account_no')
+		amount = ET.SubElement(statement, 'amount')
+		type = ET.SubElement(statement, 'type')
+		from_account_no.text = from_account
+		to_account_no.text = acc_no
+		amount.text = amnt
+		type.text = "Debited"
+
+		# create a new XML file with the results receiver
+		mydata_receiver = ET.tostring(root).decode()
+
+		#-----------File handling sender------------------------
+
+		myfile = open(path_sender, "w")
+		myfile.write(mydata_sender)
+		#-------------------------------------------------------
+
+		#-----------File handling receiver------------------------
+
+		myfile = open(path_receiver, "w")
+		myfile.write(mydata_receiver)
+		#---------------------------------------------------------
+
 
 def update(controller):
 	global username_global
@@ -476,6 +593,26 @@ class Register(Frame):
 				myfile = open(path, "w")
 				myfile.write(mydata)
 				#------------------------------------------------------
+
+				# -------------creating transaction file-----------------------------------------------------
+
+				data = ET.Element('data')
+				statement = ET.SubElement(data, 'statement')
+				from_account_no = ET.SubElement(statement, 'from_account_no')
+				to_account_no = ET.SubElement(statement, 'to_account_no')
+				amount = ET.SubElement(statement, 'amount')
+				type = ET.SubElement(statement, 'type')
+				from_account_no.text = ''
+				to_account_no.text = ''
+				amount.text = ''
+				type.text = ''
+
+				mydata = ET.tostring(data).decode()
+				path = "users/" + username+"/transaction.xml"
+				myfile = open(path, "w")
+				myfile.write(mydata)
+
+				# ---------------------------------------------------------------------
 
 
 				controller.show_frame(StartPage)

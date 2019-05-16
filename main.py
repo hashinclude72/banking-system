@@ -383,8 +383,8 @@ class Fund(Frame):
 		# create the file structure sender
 		tree = ET.parse(path_sender)
 		data = tree.getroot()
-		statement = data.find('statement')
-		# statement = ET.SubElement(data, 'statement')
+		# statement = data.find('statement')
+		statement = ET.SubElement(data, 'statement')
 		from_account_no = ET.SubElement(statement, 'from_account_no')
 		to_account_no = ET.SubElement(statement, 'to_account_no')
 		amount = ET.SubElement(statement, 'amount')
@@ -400,8 +400,8 @@ class Fund(Frame):
 		# create the file structure sender
 		tree = ET.parse(path_receiver)
 		data = tree.getroot()
-		statement = data.find('statement')
-		# statement = ET.SubElement(data, 'statement')
+		# statement = data.find('statement')
+		statement = ET.SubElement(data, 'statement')
 		from_account_no = ET.SubElement(statement, 'from_account_no')
 		to_account_no = ET.SubElement(statement, 'to_account_no')
 		amount = ET.SubElement(statement, 'amount')

@@ -364,10 +364,12 @@ class Fund(Frame):
 		query = "select account_no from login where username = '" + username_global + "'"
 		mycursor.execute(query)
 		from_account = mycursor.fetchone()
+		from_account = str(from_account[0])
 
 		query = "select username from login where account_no = '" + acc_no + "'"
 		mycursor.execute(query)
 		to_username = mycursor.fetchone()
+		to_username = to_username[0]
 
 		import xml.etree.ElementTree as ET
 		import os
@@ -378,26 +380,9 @@ class Fund(Frame):
 
 		# create the file structure sender
 		tree = ET.parse(path_sender)
-		root = tree.getroot()
-		data = root.find('data')
-		statement = ET.SubElement(data, 'statement')
-		from_account_no = ET.SubElement(statement, 'from_account_no')
-		to_account_no = ET.SubElement(statement, 'to_account_no')
-		amount = ET.SubElement(statement, 'amount')
-		type = ET.SubElement(statement, 'type')
-		from_account_no.text = from_account
-		to_account_no.text = acc_no
-		amount.text = amnt
-		type.text = "Credited"
-
-		# create a new XML file with the results sender
-		mydata_sender = ET.tostring(root).decode()
-
-		# create the file structure sender
-		tree = ET.parse(path_receiver)
-		root = tree.getroot()
-		data = root.find('data')
-		statement = ET.SubElement(data, 'statement')
+		data = tree.getroot()
+		statement = data.find('statement')
+		# statement = ET.SubElement(data, 'statement')
 		from_account_no = ET.SubElement(statement, 'from_account_no')
 		to_account_no = ET.SubElement(statement, 'to_account_no')
 		amount = ET.SubElement(statement, 'amount')
@@ -407,8 +392,25 @@ class Fund(Frame):
 		amount.text = amnt
 		type.text = "Debited"
 
+		# create a new XML file with the results sender
+		mydata_sender = ET.tostring(data).decode()
+
+		# create the file structure sender
+		tree = ET.parse(path_receiver)
+		data = tree.getroot()
+		statement = data.find('statement')
+		# statement = ET.SubElement(data, 'statement')
+		from_account_no = ET.SubElement(statement, 'from_account_no')
+		to_account_no = ET.SubElement(statement, 'to_account_no')
+		amount = ET.SubElement(statement, 'amount')
+		type = ET.SubElement(statement, 'type')
+		from_account_no.text = from_account
+		to_account_no.text = acc_no
+		amount.text = amnt
+		type.text = "Credited"
+
 		# create a new XML file with the results receiver
-		mydata_receiver = ET.tostring(root).decode()
+		mydata_receiver = ET.tostring(data).decode()
 
 		#-----------File handling sender------------------------
 
@@ -533,17 +535,20 @@ class Register(Frame):
 		print(username, password, firstname, lastname)
 		# self.username_entry.delete(0, END)
 	    # self.password_entry.delete(0, END)
+
+		import string
+		import random
+
 		if username and password and firstname and lastname:
 			mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
 			mycursor = mydb.cursor()
-			query = "INSERT INTO login(username, password, firstname, lastname) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "')"
+			acc_no = str(''.join(random.choice(string.digits) for _ in range(10)))
+			query = "INSERT INTO login(username, password, firstname, lastname, account_no) VALUES ('" + username + "', '" + password + "', '" + firstname + "', '" + lastname + "', '" + acc_no + "')"
 			try:
 				mycursor.execute(query)
 				mydb.commit()
 
 				import xml.etree.ElementTree as ET
-				import string
-				import random
 				from datetime import date
 				import os
 				size=4
@@ -562,7 +567,7 @@ class Register(Frame):
 				first_name.text = firstname
 				last_name.text = lastname
 				account_name.text = username + acc_name
-				account_number.text = str(''.join(random.choice(string.digits) for _ in range(10)))
+				account_number.text = acc_no
 				status.text = 'Active'
 				open_date.text = str(date.today())
 
@@ -595,7 +600,7 @@ class Register(Frame):
 				#------------------------------------------------------
 
 				# -------------creating transaction file-----------------------------------------------------
-
+				print("jfnrfruf")
 				data = ET.Element('data')
 				statement = ET.SubElement(data, 'statement')
 				from_account_no = ET.SubElement(statement, 'from_account_no')

@@ -377,6 +377,8 @@ class Fund(Frame):
 
 		path_sender = "users/" + username_global +"/transaction.xml"
 		path_receiver = "users/" + to_username +"/transaction.xml"
+		sender_lock = "users/" + username_global +"/file.lock"
+		receiver_lock = "users/" + to_username +"/file.lock"
 
 		# create the file structure sender
 		tree = ET.parse(path_sender)
@@ -412,17 +414,28 @@ class Fund(Frame):
 		# create a new XML file with the results receiver
 		mydata_receiver = ET.tostring(data).decode()
 
+		from filelock import Timeout, FileLock
+		lock = FileLock(sender_lock) and FileLock(receiver_lock)
+		print(lock)
+		with lock:
 		#-----------File handling sender------------------------
 
-		myfile = open(path_sender, "w")
-		myfile.write(mydata_sender)
-		#-------------------------------------------------------
+			myfile = open(path_sender, "w")
+			myfile.write(mydata_sender)
+			#-------------------------------------------------------
 
-		#-----------File handling receiver------------------------
+			#-----------File handling receiver------------------------
 
-		myfile = open(path_receiver, "w")
-		myfile.write(mydata_receiver)
+			myfile = open(path_receiver, "w")
+			myfile.write(mydata_receiver)
 		#---------------------------------------------------------
+
+
+		# from filelock import Timeout, FileLock
+		#
+		# lock = FileLock("high_ground.txt.lock")
+		# with lock:
+		# 	open("high_ground.txt", "a").write("You were the chosen one.")
 
 
 def update(controller):

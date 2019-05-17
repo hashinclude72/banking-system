@@ -204,7 +204,7 @@ class Home(Frame):
 		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		home.place(relx=0.4, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Update", font=('Sans', '15'), bd=5, command=lambda:update(controller))
 		home.place(relx=0.6, relheight=1, relwidth=0.2)
 
 		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))
@@ -266,7 +266,7 @@ class Account(Frame):
 		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		home.place(relx=0.4, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Update", font=('Sans', '15'), bd=5, command=lambda:update(controller))
 		home.place(relx=0.6, relheight=1, relwidth=0.2)
 
 		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))
@@ -344,98 +344,121 @@ class Fund(Frame):
 		amount = Label(lower_frame, text = 'Amount :-', font=('Sans', '14'), bd=5)
 		amount.place(relx = 0.02, rely = 0.45, relwidth = 0.3, relheight = 0.08)
 
-		self.account_no = Entry(lower_frame, textvariable = '')
-		self.account_no.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.08)
+		account_no = Entry(lower_frame, textvariable = '')
+		account_no.place(relx = 0.35, rely = 0.3, relwidth = 0.6, relheight = 0.08)
 
-		self.amount = Entry(lower_frame, textvariable = '')
-		self.amount.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.08)
+		amount = Entry(lower_frame, textvariable = '')
+		amount.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.08)
 
-		transfer = Button(lower_frame, text="Transfer", font=('Sans', '12'), bd=3, command=lambda:self.transfer(self.account_no.get(), self.amount.get(), controller))
-		transfer.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
+		transfer1 = Button(lower_frame, text="Transfer", font=('Sans', '12'), bd=3, command=lambda:transfer(account_no.get(), amount.get(), controller))
+		transfer1.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
-	def transfer(self, acc_no, amnt, controller):
+def transfer(acc_no, amnt, controller):
 
-		mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
-		mycursor = mydb.cursor()
-		global username_global
+	mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
+	mycursor = mydb.cursor()
+	global username_global
 
-		query = "select account_no from login where username = '" + username_global + "'"
-		mycursor.execute(query)
-		from_account = mycursor.fetchone()
-		from_account = str(from_account[0])
+	query = "select account_no from login where username = '" + username_global + "'"
+	mycursor.execute(query)
+	from_account = mycursor.fetchone()
+	from_account = str(from_account[0])
 
-		query = "select username from login where account_no = '" + acc_no + "'"
-		mycursor.execute(query)
-		to_username = mycursor.fetchone()
-		to_username = to_username[0]
+	query = "select username from login where account_no = '" + acc_no + "'"
+	mycursor.execute(query)
+	to_username = mycursor.fetchone()
+	to_username = to_username[0]
 
-		import xml.etree.ElementTree as ET
-		import os
+	import xml.etree.ElementTree as ET
+	import os
 
 
-		path_sender = "users/" + username_global +"/transaction.xml"
-		path_receiver = "users/" + to_username +"/transaction.xml"
-		sender_lock = "users/" + username_global +"/file.lock"
-		receiver_lock = "users/" + to_username +"/file.lock"
+	path_sender_trans = "users/" + username_global +"/transaction.xml"
+	path_receiver_trans = "users/" + to_username +"/transaction.xml"
+	path_sender_amt = "users/" + username_global +"/amount.xml"
+	path_receiver_amt = "users/" + to_username +"/amount.xml"
+	sender_lock = "users/" + username_global +"/file.lock"
+	receiver_lock = "users/" + to_username +"/file.lock"
 
-		# create the file structure sender
-		tree = ET.parse(path_sender)
-		data = tree.getroot()
-		# statement = data.find('statement')
-		statement = ET.SubElement(data, 'statement')
-		from_account_no = ET.SubElement(statement, 'from_account_no')
-		to_account_no = ET.SubElement(statement, 'to_account_no')
-		amount = ET.SubElement(statement, 'amount')
-		type = ET.SubElement(statement, 'type')
-		from_account_no.text = from_account
-		to_account_no.text = acc_no
-		amount.text = amnt
-		type.text = "Debited"
+	# create the file structure sender
+	tree = ET.parse(path_sender_trans)
+	data = tree.getroot()
+	# statement = data.find('statement')
+	statement = ET.SubElement(data, 'statement')
+	from_account_no = ET.SubElement(statement, 'from_account_no')
+	to_account_no = ET.SubElement(statement, 'to_account_no')
+	amount = ET.SubElement(statement, 'amount')
+	type = ET.SubElement(statement, 'type')
+	from_account_no.text = from_account
+	to_account_no.text = acc_no
+	amount.text = amnt
+	type.text = "Debited"
 
-		# create a new XML file with the results sender
-		mydata_sender = ET.tostring(data).decode()
+	# create a new XML string with the results sender
+	mydata_sender_trans = ET.tostring(data).decode()
 
-		# create the file structure sender
-		tree = ET.parse(path_receiver)
-		data = tree.getroot()
-		# statement = data.find('statement')
-		statement = ET.SubElement(data, 'statement')
-		from_account_no = ET.SubElement(statement, 'from_account_no')
-		to_account_no = ET.SubElement(statement, 'to_account_no')
-		amount = ET.SubElement(statement, 'amount')
-		type = ET.SubElement(statement, 'type')
-		from_account_no.text = from_account
-		to_account_no.text = acc_no
-		amount.text = amnt
-		type.text = "Credited"
+	# create the file structure sender
+	tree = ET.parse(path_receiver_trans)
+	data = tree.getroot()
+	# statement = data.find('statement')
+	statement = ET.SubElement(data, 'statement')
+	from_account_no = ET.SubElement(statement, 'from_account_no')
+	to_account_no = ET.SubElement(statement, 'to_account_no')
+	amount = ET.SubElement(statement, 'amount')
+	type = ET.SubElement(statement, 'type')
+	from_account_no.text = from_account
+	to_account_no.text = acc_no
+	amount.text = amnt
+	type.text = "Credited"
 
-		# create a new XML file with the results receiver
-		mydata_receiver = ET.tostring(data).decode()
+	# create a new XML string with the results receiver
+	mydata_receiver_trans = ET.tostring(data).decode()
 
-		from filelock import Timeout, FileLock
-		lock = FileLock(sender_lock) and FileLock(receiver_lock)
+	tree = ET.parse(path_sender_amt)
+	data = tree.getroot()
+	sender_amt = float(data[0].text)
+	print(sender_amt)
+
+	tree = ET.parse(path_receiver_amt)
+	data = tree.getroot()
+	receiver_amt = float(data[0].text)
+	print(receiver_amt)
+
+	amnt = float(amnt)
+	if(sender_amt >= amnt):
+		sender_amt = sender_amt - amnt
+		receiver_amt = receiver_amt + amnt
+
+		data = ET.Element('data')
+		amount = ET.SubElement(data, 'amount')
+		amount.text = str(sender_amt)
+		mydata_sender_amt = ET.tostring(data).decode()
+
+		data = ET.Element('data')
+		amount = ET.SubElement(data, 'amount')
+		amount.text = str(receiver_amt)
+		mydata_receiver_amt = ET.tostring(data).decode()
+		#-----------------File Locking---------------------------
+		from lockfile import LockFile
+		lock = LockFile(sender_lock)
+		lock2 = LockFile(receiver_lock)
 		print(lock)
+		print(lock2)
 		with lock:
-		#-----------File handling sender------------------------
-
-			myfile = open(path_sender, "w")
-			myfile.write(mydata_sender)
-			#-------------------------------------------------------
-
-			#-----------File handling receiver------------------------
-
-			myfile = open(path_receiver, "w")
-			myfile.write(mydata_receiver)
-		#---------------------------------------------------------
-
-
-		# from filelock import Timeout, FileLock
-		#
-		# lock = FileLock("high_ground.txt.lock")
-		# with lock:
-		# 	open("high_ground.txt", "a").write("You were the chosen one.")
+			with lock2:
+			#-----------File handling sender------------------------
+				open(path_sender_trans, "w").write(mydata_sender_trans)
+				open(path_sender_amt, "w").write(mydata_sender_amt)
+				#-------------------------------------------------------
+				#-----------File handling receiver------------------------
+				open(path_receiver_trans, "w").write(mydata_receiver_trans)
+				open(path_receiver_amt, "w").write(mydata_receiver_amt)
+			#---------------------------------------------------------
+	else:
+		print("Insufficient amount")
+	update(controller)
 
 
 def update(controller):
@@ -613,7 +636,6 @@ class Register(Frame):
 				#------------------------------------------------------
 
 				# -------------creating transaction file-----------------------------------------------------
-				print("jfnrfruf")
 				data = ET.Element('data')
 				statement = ET.SubElement(data, 'statement')
 				from_account_no = ET.SubElement(statement, 'from_account_no')
@@ -627,11 +649,15 @@ class Register(Frame):
 
 				mydata = ET.tostring(data).decode()
 				path = "users/" + username+"/transaction.xml"
+				print(path)
 				myfile = open(path, "w")
 				myfile.write(mydata)
-
 				# ---------------------------------------------------------------------
-
+				path = "users/" + username+"/file.lock"
+				print(path)
+				myfile = open(path, "w")
+				myfile.write("lock")
+				myfile.close()
 
 				controller.show_frame(StartPage)
 			except:

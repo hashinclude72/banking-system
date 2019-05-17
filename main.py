@@ -222,11 +222,11 @@ class Home(Frame):
 		fund_transfer = Button(lower_frame, text="Fund Transfer", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(Fund))
 		fund_transfer.place(relx=0.5, rely=0, relheight=0.15, relwidth=0.5)
 
-		mini_statement = Button(lower_frame, text="Mini Statement", font=('Sans', '15'), bd=5)
-		mini_statement.place(relx=0, rely=0.15, relheight=0.15, relwidth=0.5)
-
-		mini_pdf = Button(lower_frame, text="Download Mini\nStatement as PDF", font=('Sans', '15'), bd=5)
-		mini_pdf.place(relx=0.5, rely=0.15, relheight=0.15, relwidth=0.5)
+		# mini_statement = Button(lower_frame, text="Mini Statement", font=('Sans', '15'), bd=5)
+		# mini_statement.place(relx=0, rely=0.15, relheight=0.15, relwidth=0.5)
+		#
+		# mini_pdf = Button(lower_frame, text="Download Mini\nStatement as PDF", font=('Sans', '15'), bd=5)
+		# mini_pdf.place(relx=0.5, rely=0.15, relheight=0.15, relwidth=0.5)
 
 		user_name = Label(lower_frame, text = 'Hello welcome to INTRIGIN Banking.', font=('Sans', '14'), bd=5)
 		user_name.place(relx = 0, rely = 0.35, relheight=0.1)
@@ -326,7 +326,7 @@ class Fund(Frame):
 		home = Button(frame, text="Fund \nTransfer", font=('Sans', '15'), bd=5)
 		home.place(relx=0.4, relheight=1, relwidth=0.2)
 
-		home = Button(frame, text="Services", font=('Sans', '15'), bd=5)
+		home = Button(frame, text="Update", font=('Sans', '15'), bd=5)
 		home.place(relx=0.6, relheight=1, relwidth=0.2)
 
 		home = Button(frame, text="Logout", font=('Sans', '15'), bd=5, command=lambda:controller.show_frame(StartPage))

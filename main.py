@@ -350,13 +350,19 @@ class Fund(Frame):
 		amount = Entry(lower_frame, textvariable = '')
 		amount.place(relx = 0.35, rely = 0.45, relwidth = 0.6, relheight = 0.08)
 
+		global text_msg_fund
+
+		text_msg_fund = Label(lower_frame)
+		text_msg_fund.place(rely=0.65, relx=0.45)
+
 		transfer1 = Button(lower_frame, text="Transfer", font=('Sans', '12'), bd=3, command=lambda:transfer(account_no.get(), amount.get(), controller))
 		transfer1.place(relx = 0.3, rely = 0.8, relwidth = 0.4, relheight = 0.1)
 
 		# BODY FRAME END----------------------------------------------------------------------------------------------------
 
 def transfer(acc_no, amnt, controller):
-
+	global text_msg_fund
+	text_msg_fund.config(text="", fg="red")
 	mydb = mysql.connector.connect(host="remotemysql.com", user="HtVCfBRiAp", passwd="aahR8EPevy", database="HtVCfBRiAp")
 	mycursor = mydb.cursor()
 	global username_global
@@ -446,17 +452,26 @@ def transfer(acc_no, amnt, controller):
 		lock2 = LockFile(receiver_lock)
 		print(lock)
 		print(lock2)
-		with lock:
-			with lock2:
-			#-----------File handling sender------------------------
-				open(path_sender_trans, "w").write(mydata_sender_trans)
-				open(path_sender_amt, "w").write(mydata_sender_amt)
-				#-------------------------------------------------------
-				#-----------File handling receiver------------------------
-				open(path_receiver_trans, "w").write(mydata_receiver_trans)
-				open(path_receiver_amt, "w").write(mydata_receiver_amt)
-			#---------------------------------------------------------
+		try:
+			lock.acquire(timeout=10)
+			lock2.acquire(timeout=10)
+		#-----------File handling sender------------------------
+			open(path_sender_trans, "w").write(mydata_sender_trans)
+			open(path_sender_amt, "w").write(mydata_sender_amt)
+			#-------------------------------------------------------
+			#-----------File handling receiver------------------------
+			open(path_receiver_trans, "w").write(mydata_receiver_trans)
+			open(path_receiver_amt, "w").write(mydata_receiver_amt)
+		#---------------------------------------------------------
+			lock.release()
+			lock2.release()
+			text_msg_fund.config(text="Money sent", fg="red")
+		except:
+			text_msg_fund.config(text="Server timeout ", fg="red")
+			print("lock failed")
+
 	else:
+		text_msg_fund.config(text="Insufficient Amount ", fg="red")
 		print("Insufficient amount")
 	update(controller)
 
